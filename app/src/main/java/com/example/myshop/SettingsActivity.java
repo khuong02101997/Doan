@@ -126,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
         userMap.put("phoneOrder", fullNameEditText.getText().toString());
         ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
-        startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+        startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
         Toast.makeText(SettingsActivity.this, "Profile info update successfully.", Toast.LENGTH_SHORT).show();
         finish();
 
@@ -179,8 +179,8 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
-                        Uri dowloadUri = task.getResult();
-                        myUri = dowloadUri.toString();
+                        Uri downloadUri = task.getResult();
+                        myUri = downloadUri.toString();
 
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -192,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity {
                         ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
                         progressDialog.dismiss();
-                        startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+                        startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
                         Toast.makeText(SettingsActivity.this, "Profile info update successfully.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
