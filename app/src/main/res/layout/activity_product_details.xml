@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProductDetailsActivity">
+    tools:context=".Buyers.ProductDetailsActivity">
 
     <ImageView
         android:id="@+id/product_image_details"
         android:layout_width="match_parent"
         android:layout_height="260dp"
         android:scaleType="centerCrop"
-        android:contentDescription="TODO" />
+        />
+
     <TextView
         android:id="@+id/product_name_details"
         android:layout_width="match_parent"
@@ -37,6 +39,7 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         />
+
     <TextView
         android:id="@+id/product_price_details"
         android:layout_width="match_parent"
@@ -49,28 +52,33 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         />
+
+
     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-        android:layout_height="wrap_content"
-        android:layout_width="200dp"
         android:id="@+id/number_btn"
-        android:layout_below="@+id/product_price_details"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:elevation="6dp"
-        app:finalNumber="10"
-        app:initialNumber="1"
-        app:textSize="16sp"
-        >
-    </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
-    <com.rey.material.widget.FloatingActionButton
-        android:id="@+id/add_product_to_cart_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fab_backgroundColor="@android:color/white"
-        app:fab_iconSrc="@drawable/nav_cart"
+        android:elevation="6dp"
+        app:textSize="16dp"
+        app:initialNumber="1"
+        app:finalNumber="10"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/product_price_details"
+        android:layout_marginTop="10dp"
+        >
+    </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+
+
+    <Button
+        android:id="@+id/pd_add_to_cart_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_margin="15dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-    />
+        android:text="Thêm vào giỏ"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        />
 
 </RelativeLayout>

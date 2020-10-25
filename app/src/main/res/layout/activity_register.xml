@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/register"
-    tools:context=".RegisterActivity">
+    tools:context=".Buyers.RegisterActivity">
 
     <ImageView
         android:id="@+id/register_applogo"
@@ -25,10 +25,10 @@
         android:layout_marginTop="30dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Name"
+        android:hint="Họ và tên"
         android:inputType="text"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorText"
         android:textSize="17sp"
         android:textStyle="bold"
         />
@@ -43,10 +43,10 @@
         android:layout_marginTop="6dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Phone Number"
+        android:hint="Sô điện thoại"
         android:inputType="number"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorText"
         android:textSize="17sp"
         android:textStyle="bold"
         />
@@ -61,10 +61,10 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="6dp"
-        android:hint="Password"
+        android:hint="Mật khảu"
         android:inputType="textPassword"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorText"
         android:textSize="17sp"
         android:textStyle="bold"
         />
@@ -82,7 +82,7 @@
         android:padding="17dp"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:text="Create Account"
+        android:text="Tạo tài khoản"
         android:textColor="@android:color/white"
         />
 

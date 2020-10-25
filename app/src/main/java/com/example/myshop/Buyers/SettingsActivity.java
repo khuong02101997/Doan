@@ -1,12 +1,12 @@
-package com.example.myshop;
+package com.example.myshop.Buyers;
 
 import android.app.ProgressDialog;
-import android.app.usage.StorageStats;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myshop.Prevalent.Prevalent;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
+import com.example.myshop.Prevalent.Prevalent;
+import com.example.myshop.R;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -40,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
     private CircleImageView profileImageView;
     private EditText fullNameEditText, userPhoneEditText, addressEditText;
     private TextView profileChangeTextBtn, closeTextBtn, saveTextBtn;
+    private Button securityQuestionBtn;
 
     private Uri imageUri;
     private String myUri = "";
@@ -54,13 +55,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         storageReferenceProfileprictureRef = FirebaseStorage.getInstance().getReference().child("Profile picture");
 
-        profileImageView = (CircleImageView) findViewById(R.id.settings_profile_image);
-        fullNameEditText = (EditText) findViewById(R.id.settings_full_name);
-        userPhoneEditText = (EditText) findViewById(R.id.settings_phone_number);
-        addressEditText = (EditText) findViewById(R.id.settings_address);
-        profileChangeTextBtn = (TextView) findViewById(R.id.profile_image_change_btn);
-        closeTextBtn = (TextView) findViewById(R.id.close_settings_btn);
-        saveTextBtn = (TextView) findViewById(R.id.update_setting_btn);
+        profileImageView = findViewById(R.id.settings_profile_image);
+        fullNameEditText = findViewById(R.id.settings_full_name);
+        userPhoneEditText = findViewById(R.id.settings_phone_number);
+        addressEditText = findViewById(R.id.settings_address);
+        profileChangeTextBtn = findViewById(R.id.profile_image_change_btn);
+        closeTextBtn = findViewById(R.id.close_settings_btn);
+        saveTextBtn = findViewById(R.id.update_setting_btn);
+        securityQuestionBtn = findViewById(R.id.security_questions_btn);
 
 
         userInfoDisplay(profileImageView, fullNameEditText, userPhoneEditText, addressEditText);
@@ -70,6 +72,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        securityQuestionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
+                intent.putExtra("check","settings");
+                startActivity(intent);
             }
         });
 
@@ -143,8 +154,8 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else if (TextUtils.isEmpty(userPhoneEditText.getText().toString())){
 
-                Toast.makeText(this, "Name is number phone.", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(this, "Name is number phone.", Toast.LENGTH_SHORT).show();
+        }
         else if(checker.equals("clicked")){
             uploadImage();
         }
@@ -175,33 +186,33 @@ public class SettingsActivity extends AppCompatActivity {
                     return fileRef.getDownloadUrl();
                 }
             })
-            .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()){
-                        Uri downloadUri = task.getResult();
-                        myUri = downloadUri.toString();
+                    .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()){
+                                Uri downloadUri = task.getResult();
+                                myUri = downloadUri.toString();
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
 
-                        HashMap<String, Object> userMap = new HashMap<>();
-                        userMap.put("name", fullNameEditText.getText().toString());
-                        userMap.put("address", addressEditText.getText().toString());
-                        userMap.put("phoneOrder", fullNameEditText.getText().toString());
-                        userMap.put("image", myUri);
-                        ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
+                                HashMap<String, Object> userMap = new HashMap<>();
+                                userMap.put("name", fullNameEditText.getText().toString());
+                                userMap.put("address", addressEditText.getText().toString());
+                                userMap.put("phoneOrder", fullNameEditText.getText().toString());
+                                userMap.put("image", myUri);
+                                ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
-                        progressDialog.dismiss();
-                        startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
-                        Toast.makeText(SettingsActivity.this, "Profile info update successfully.", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                    else {
-                        progressDialog.dismiss();
-                        Toast.makeText(SettingsActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                                progressDialog.dismiss();
+                                startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
+                                Toast.makeText(SettingsActivity.this, "Profile info update successfully.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            else {
+                                progressDialog.dismiss();
+                                Toast.makeText(SettingsActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
         else {
             Toast.makeText(this, "Image not selected.", Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package com.example.myshop;
+package com.example.myshop.Buyers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,32 +18,41 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myshop.Model.Products;
-import com.example.myshop.Prevalent.Prevalent;
-import com.example.myshop.ViewHolder.ProductViewHolder;
+import com.example.myshop.MainActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.example.myshop.Admin.AdminMaintainProductsActivity;
+import com.example.myshop.Model.Products;
+import com.example.myshop.Prevalent.Prevalent;
+import com.example.myshop.R;
+import com.example.myshop.ViewHolder.ProductViewHolder;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
-public class HomeActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DatabaseReference ProductsRef;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+
+    private String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+       Intent intent = getIntent();
+       Bundle bundle = intent.getExtras();
+       if (bundle != null){
+           type = getIntent().getExtras().get("Admin").toString();
+       }
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
 
@@ -58,8 +67,11 @@ public class HomeActivity extends AppCompatActivity  implements NavigationView.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (!type.equals("Admin")){
+                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,8 +88,10 @@ public class HomeActivity extends AppCompatActivity  implements NavigationView.O
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        userNameTextView.setText(Prevalent.currentOnlineUser.getName());
-        Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        if (!type.equals("Admin")){
+            userNameTextView.setText(Prevalent.currentOnlineUser.getName());
+            Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        }
 
 
         recyclerView = findViewById(R.id.recycler_menu);
@@ -91,16 +105,38 @@ public class HomeActivity extends AppCompatActivity  implements NavigationView.O
     protected void onStart() {
         super.onStart();
 
-        FirebaseRecyclerOptions<Products> options = new FirebaseRecyclerOptions.Builder<Products>().setQuery(ProductsRef, Products.class).build();
+        FirebaseRecyclerOptions<Products> options = new FirebaseRecyclerOptions.Builder<Products>()
+                .setQuery(ProductsRef.orderByChild("productState").equalTo("Đã phê duyệt"), Products.class).build();
 
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder, int i, @NonNull Products products) {
+                    protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder,
+                                                    int i, @NonNull final Products products) {
                         productViewHolder.txtProductName.setText(products.getName());
-                        productViewHolder.txtProductDescription.setText(products.getDescription());
+//                        productViewHolder.txtProductDescription.setText(products.getDescription());
                         productViewHolder.txtProductPrice.setText("Giá : " + products.getPrice() + " VND");
                         Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
+
+
+                        productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (type.equals("Admin")){
+                                    Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                    intent.putExtra( "id", products.getId());
+                                    intent.putExtra("sid", products.getSid());
+                                    startActivity(intent);
+
+                                }
+                                else {
+                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                    intent.putExtra( "id", products.getId());
+                                    intent.putExtra("sid", products.getSid());
+                                    startActivity(intent);
+                                }
+                            }
+                        });
 
                     }
 
@@ -146,29 +182,41 @@ public class HomeActivity extends AppCompatActivity  implements NavigationView.O
 
         if (id == R.id.nav_cart)
         {
-
+            if (!type.equals("Admin")){
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
         }
-        else if (id == R.id.nav_orders)
+        else if (id == R.id.nav_search)
         {
-
+            if (!type.equals("Admin")){
+                Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
+                startActivity(intent);
+            }
         }
-        else if (id == R.id.nav_categories)
+        else if (id == R.id.nav_order)
         {
+            if (!type.equals("Admin")){
+                Intent intent = new Intent(HomeActivity.this, OrdersActivity.class);
+                startActivity(intent);
+            }
 
         }
         else if (id == R.id.nav_settings)
         {
-            Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
-            startActivity(intent);
+            if (!type.equals("Admin")){
+                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
         }
         else if (id == R.id.nav_logout)
         {
-            Paper.book().destroy();
+                Paper.book().destroy();
 
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -10,14 +10,14 @@
             android:title="@string/menu_carts"
             android:iconTint="@android:color/white"/>
         <item
-            android:id="@+id/nav_orders"
-            android:icon="@drawable/orders"
-            android:title="@string/menu_orders"
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/menu_search"
             android:iconTint="@android:color/white"/>
         <item
-            android:id="@+id/nav_categories"
-            android:icon="@drawable/category"
-            android:title="@string/menu_categories"
+            android:id="@+id/nav_order"
+            android:icon="@drawable/ic_order_list"
+            android:title="@string/menu_order"
             android:iconTint="@android:color/white"/>
         <item
             android:id="@+id/nav_settings"

@@ -1,7 +1,4 @@
-package com.example.myshop;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.myshop.Buyers;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,7 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.Objects;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myshop.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -20,8 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.example.myshop.R;
 
-import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -37,10 +37,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
 
-        CreateAccountButton = (Button) findViewById(R.id.register_btn);
-        InputName = (EditText) findViewById(R.id.register_username_input);
-        InputPhoneNumber = (EditText) findViewById(R.id.register_phone_number_input);
-        InputPassword = (EditText) findViewById(R.id.register_password_input);
+        CreateAccountButton = findViewById(R.id.register_btn);
+        InputName = findViewById(R.id.register_username_input);
+        InputPhoneNumber = findViewById(R.id.register_phone_number_input);
+        InputPassword = findViewById(R.id.register_password_input);
         loadingBar = new ProgressDialog(this);
 
 
@@ -62,28 +62,27 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(name))
         {
-            Toast.makeText(this,"Please write your name...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Vui long nhập tên của bạn...", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(phone))
         {
-            Toast.makeText(this,"Please write your phone number...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Vui long nhập số điện thoại của bạn...", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password))
         {
-            Toast.makeText(this,"Please write your password...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Vui long nhập mật khẩu của bạn...", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            loadingBar.setTitle("Create Account");
-            loadingBar.setMessage("Please wait, white we are checking the credentials.");
+            loadingBar.setTitle("Tạo tài khoản");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
-            ValidatephoneNumber(name, phone, password);
+            ValidatePhoneNumber(name, phone, password);
         }
     }
 
-    private void ValidatephoneNumber(final String name, final String phone, final String password)
+    private void ValidatePhoneNumber(final String name, final String phone, final String password)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -105,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful())
                                     {
-                                        Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created.",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "Tạo tài khoản thành công",Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
 
                                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -114,16 +113,16 @@ public class RegisterActivity extends AppCompatActivity {
                                     else
                                     {
                                         loadingBar.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "Netwok Error: Please try again after some time...",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "Lỗi mạng! VUi lòng thử lại...",Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                 }
                 else
                 {
-                    Toast.makeText(RegisterActivity.this,"This" + phone + "already exists.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this,"Số điện thoại " + phone + " đã được sử dụng ", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Vui lòng thử bằng số điện thoại khác", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
